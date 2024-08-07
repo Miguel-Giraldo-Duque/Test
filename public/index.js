@@ -1,52 +1,3 @@
-
-// let button = document.getElementById("btn")
-// const recgonition = new window.webkitSpeechRecognition()
-// recgonition.interimResults = true
-// recgonition.continuous = true
-// let result
-
-
-// recgonition.onresult = (event) =>{
-//     let text = ""
-
-
-//     for (let i = 0; i < event.results.length; i++) {
-//         text += event.results[i][0].transcript
-//         let textarea = document.getElementById("area").textContent = text
-//         console.log(textarea)
-//     }
-
-// }
-
-// recgonition.onspeechend = () => {
-//     recgonition.stop();
-// };
-
-// console.log(recgonition) 
-// let pressed = false
-// let intervalId
-
-// button.addEventListener("mousedown", () => {
-//     recgonition.start();
-//     pressed = true;
-//     intervalId = setInterval(whilePressed);
-// });
-
-// button.addEventListener("mouseup", () => {
-//     recgonition.stop();
-//     console.log("dejando de escuchar");
-//     pressed = false;
-//     clearInterval(intervalId); // Detiene el intervalo cuando se suelta el botón
-// });
-
-// function whilePressed() {
-//     if (pressed) {
-//         console.log("botón sigue presionado");
-//     } else {
-//         clearInterval(intervalId);
-//     }
-// }
-
 let button = document.getElementById("btn");
 const recognition = new window.webkitSpeechRecognition();
 recognition.interimResults = true;
@@ -106,22 +57,47 @@ console.log(recognition);
 let pressed = false;
 let intervalId;
 
-button.addEventListener("mousedown", () => {
-    
-        btn.style.backgroundColor  = "green"
+console.log(window.addEventListener("pointerdown", detectInputType, false))
+
+window.addEventListener("pointerdown", detectInputType, false);
+
+function detectInputType(event) {
+    switch(event.pointerType) {
+        case "mouse":
+            console.log("mouse")
+            button.addEventListener("mousedown", onPressStart);
+            button.addEventListener("mouseup", onPressEnd);
+            break;
+        case "pen":
+            // pen/stylus input detected
+            break;
+        case "touch":
+             console.log("Phone")
+            button.addEventListener("touchstart", onPressStart);
+            button.addEventListener("touchend", onPressEnd);
+            break;
+        default:
+            // pointerType is empty (could not be detected) or UA-specific custom type
+    }
+}
+
+function onPressStart() {
+    button.style.backgroundColor = "green";
     pressed = true;
     startRecognition();
     intervalId = setInterval(whilePressed, 1000);
-});
+}
 
-button.addEventListener("mouseup", () => {
+function onPressEnd() {
     recognition.stop();
-        btn.style.backgroundColor  = "white"
+    button.style.backgroundColor = "white";
     console.log("dejando de escuchar");
     pressed = false;
     clearInterval(intervalId); // Detiene el intervalo cuando se suelta el botón
     clearTimeout(silenceTimeout);
-});
+}
+
+
 
 function whilePressed() {
     if (pressed) {
